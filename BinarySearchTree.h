@@ -1,14 +1,12 @@
 #pragma once
 #define CRT_SECURE_NO_WARNINGS
 #include<iostream>
-
-//tree node
 template<class K>
 struct Node 
 {
 	K _data;
-	Node* _left;
-	Node* _right;
+	Node<K>* _left;
+	Node<K>* _right;
 	Node(K data = 0) : _data(data),_left(nullptr),_right(nullptr)
 	{}
 };
@@ -18,14 +16,9 @@ class BinarySearchTree
 {
 	typedef Node<K>* BTNode;
 public:
-//default constructor
 	BinarySearchTree() :_root(nullptr){}
-//add one element, if no root, then create a root
-//if larger than root, then go right and find the correct space. 
-//if smaller than root, then go left and find the correct space.
 	bool Add(const K& data)
 	{
-  //check if tree is empty
 		if (_root == nullptr)
 		{
 			_root = new Node<K>(data);
@@ -33,41 +26,31 @@ public:
 		}
 		else
 		{
-      //current pointer place
 			BTNode cur = _root;
-      //current pointer's parent
 			BTNode parent = nullptr;
-			//while current pointer is not nullpointer 
-      while (cur)
+			while (cur)
 			{
-      //if current pointer's data is larger than new data
-      //then go left
 				if (cur->_data > data)
 				{
 					parent = cur;
 					cur = cur->_left;
 				}
-      //if current pointer's data is smaller than new data
-      //then go right
 				else if(cur->_data < data)
 				{
 					parent = cur;
 					cur = cur->_right;
 				}
-        //if the data already exist, then return false
 				else
 				{
 					std::cout << "Data already exist.\n";
 					return false;
 				}
 			}
-      //if new data is larger than parent's data, then add the element to parent's right
 			if (data > parent->_data)
 			{
 				BTNode newNode = new Node<K>(data);
 				parent->_right = newNode;
 			}
-      //else add it to left
 			else
 			{
 				BTNode newNode = new Node<K>(data);
@@ -77,16 +60,118 @@ public:
 		}
 	}
 
+	BTNode find(const K& data)
+	{
+		BTNode cur = _root;
+		while (cur)
+		{
+			if (cur->_data < data)
+			{
+				cur = cur->_right;
+			}
+			else if(cur->_data > data)
+			{
+				cur = cur->_left;
+			}
+			else
+			{
+				return cur;
+			}
+		}
+		return nullptr;
+	}
+
+	void erase(const K& data)
+	{
+		BTNode cur = _root;
+		BTNode parent = _root;
+		while (cur)
+		{
+			if (cur->_data > data)
+			{
+				parent = cur;
+				cur = cur->_left;
+			}
+			else if (cur->_data < data)
+			{
+				parent = cur;
+				cur = cur->_right;
+			}
+			else
+			{
+				break;
+			}
+		}
+		if (!cur)
+		{
+			std::cout << "Delete failed. Data no found!\n";
+			return;
+		}
+		if (cur->_left == nullptr)
+		{
+			if (cur == _root)
+			{
+				_root = _root->_right;
+				delete cur;
+			}
+			else
+			{
+				if (parent->_left == cur)
+				{
+					parent->_left = cur->_right;
+					delete cur;
+				}
+				else
+				{
+					parent->_right = cur->_right;
+					delete cur;
+				}
+			}
+		}
+		else if(cur->_right == nullptr)
+		{
+			if (cur == _root)
+			{
+				_root = _root->_left;
+				delete cur;
+			}
+			else
+			{
+				if (parent->_left == cur)
+				{
+					parent->_left = cur->_left;
+					delete cur;
+				}
+				else
+				{
+					parent->_right = cur->_left;
+					delete cur;
+				}
+			}
+		}
+		else
+		{
+			//find the max value of left tree   or    find the min value of right tree
+			//save the value and delete it
+			//replace cur position's data by the value
+			BTNode maxNode = cur->_left;
+			while (maxNode->_right)
+			{
+				maxNode = maxNode->_right;
+			}
+			K tmp = maxNode->_data;
+			erase(maxNode->_data);
+			cur->_data = tmp;
+		}
+	}
+
 	void InOrder()
 	{
-  //recursively traverse. in order
 		_InOrder(_root);
 	}
 
 private:
 	BTNode _root;
-  
-  //Inorder's sub function.
 	void _InOrder(BTNode node)
 	{
 		if (node == nullptr)
