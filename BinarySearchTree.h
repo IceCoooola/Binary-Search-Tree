@@ -167,6 +167,11 @@ public:
 
 	void InOrder()
 	{
+		if (_root == nullptr)
+		{
+			std::cout << "list empty.\n";
+			return;
+		}
 		_InOrder(_root);
 	}
 
