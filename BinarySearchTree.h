@@ -1,22 +1,20 @@
 #pragma once
-#define CRT_SECURE_NO_WARNINGS
 #include<iostream>
 template<class K>
-struct Node 
+struct Node
 {
 	K _data;
 	Node<K>* _left;
 	Node<K>* _right;
-	Node(K data = 0) : _data(data),_left(nullptr),_right(nullptr)
-	{}
+	Node(K data = 0) : _data(data), _left(nullptr), _right(nullptr){}
 };
 
 template<class K>
-class BinarySearchTree 
+class BinarySearchTree
 {
 	typedef Node<K>* BTNode;
 public:
-	BinarySearchTree() :_root(nullptr){}
+	BinarySearchTree() :_root(nullptr) {}
 	bool Add(const K& data)
 	{
 		if (_root == nullptr)
@@ -35,7 +33,7 @@ public:
 					parent = cur;
 					cur = cur->_left;
 				}
-				else if(cur->_data < data)
+				else if (cur->_data < data)
 				{
 					parent = cur;
 					cur = cur->_right;
@@ -60,6 +58,12 @@ public:
 		}
 	}
 
+	//Insert a data using recursion.
+	bool AddR(const K& data)
+	{
+		return _AddR(_root, data);
+	}
+
 	BTNode find(const K& data)
 	{
 		BTNode cur = _root;
@@ -69,7 +73,7 @@ public:
 			{
 				cur = cur->_right;
 			}
-			else if(cur->_data > data)
+			else if (cur->_data > data)
 			{
 				cur = cur->_left;
 			}
@@ -128,7 +132,7 @@ public:
 				}
 			}
 		}
-		else if(cur->_right == nullptr)
+		else if (cur->_right == nullptr)
 		{
 			if (cur == _root)
 			{
@@ -176,6 +180,7 @@ public:
 	}
 
 private:
+
 	BTNode _root;
 	void _InOrder(BTNode node)
 	{
@@ -186,5 +191,26 @@ private:
 		_InOrder(node->_left);
 		std::cout << node->_data << " ";
 		_InOrder(node->_right);
+	}
+
+	bool _AddR(BTNode& root,const K& data)
+	{
+		if (root == nullptr)
+		{
+			root = new Node<K>(data);
+			return true; 
+		}
+		if (data > root->_data)
+		{
+			return _AddR(root->_right, data);
+		}
+		else if (data < root->_data)
+		{
+			return _AddR(root->_left , data);
+		}
+		else
+		{
+			return false;
+		}
 	}
 };
