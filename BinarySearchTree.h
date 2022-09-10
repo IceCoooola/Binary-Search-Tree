@@ -1,6 +1,7 @@
 #pragma once
 #include<iostream>
 template<class K>
+
 struct Node
 {
 	K _data;
