@@ -14,7 +14,20 @@ class BinarySearchTree
 {
 	typedef Node<K>* BTNode;
 public:
+
 	BinarySearchTree() :_root(nullptr) {}
+
+	BinarySearchTree(const BinarySearchTree<K>& root)
+	{
+		_root = _copy(root._root);
+	}
+
+	BinarySearchTree<K>& operator=(BinarySearchTree<K> copy)
+	{
+		swap(_root, copy._root);
+		return *this;
+	}
+
 	bool Add(const K& data)
 	{
 		if (_root == nullptr)
@@ -169,6 +182,11 @@ public:
 		}
 	}
 
+	bool eraseR(const K& data)
+	{
+		return _eraseR(_root, data);
+	}
+
 	void InOrder()
 	{
 		if (_root == nullptr)
@@ -182,6 +200,17 @@ public:
 private:
 
 	BTNode _root;
+
+	BTNode _copy(const BTNode& root)
+	{
+		if (root == nullptr)
+			return nullptr;
+		BTNode copy = new Node<K>(root->_data);
+		copy->_left = _copy(root->_left);
+		copy->_right = _copy(root->_right);
+		return copy;
+	}
+
 	void _InOrder(BTNode node)
 	{
 		if (node == nullptr)
@@ -211,6 +240,47 @@ private:
 		else
 		{
 			return false;
+		}
+	}
+
+	bool _eraseR(BTNode& root,const K& data)
+	{
+		if (root == nullptr)
+			return false;
+		if (data > root->_data)
+		{
+			return _eraseR(root->_right, data);
+		}
+		else if (data < root->_data)
+		{
+			return _eraseR(root->_left, data);
+		}
+		else
+		{
+			if (root->_left == nullptr)
+			{
+				BTNode del = root;
+				root = root->_right;
+				delete del;
+			}
+			else if (root->_right == nullptr)
+			{
+				BTNode del = root;
+				root = root->_left;
+				delete del;
+			}
+			else
+			{
+				BTNode minRight = root->_right;
+				while (minRight->_left)
+				{
+					minRight = minRight->_left;
+				}
+				int min = minRight->_data;
+				_eraseR(root->_right, min);
+				root->_data = min;
+			}
+			return true;
 		}
 	}
 };
