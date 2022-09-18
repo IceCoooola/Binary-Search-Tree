@@ -472,7 +472,7 @@ namespace KV
 				V tmpValue = maxNode->_value;
 				erase(maxNode->_key);
 				cur->_key = tmpKey;
-				cur->_Value = tmpValue;
+				cur->_value = tmpValue;
 			}
 		}
 
