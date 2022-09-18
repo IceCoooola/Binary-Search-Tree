@@ -1,11 +1,11 @@
 #define CRT_SECURE_NO_WARNINGS
 #include"BinarySearchTree.h"
-
+#include<string>
 
 
 int main()
 {
-	BinarySearchTree<int> bt;
+	K::BinarySearchTree<int> bt;
 	bt.AddR(1);
 	bt.AddR(22);
 	bt.AddR(3);
@@ -13,11 +13,11 @@ int main()
 	bt.AddR(-1);
 	bt.AddR(61);
 	bt.InOrder();
-	BinarySearchTree<int> btcpy(bt);
+	K::BinarySearchTree<int> btcpy(bt);
 	std::cout << std::endl << "test constructor copy node:\n";
 	btcpy.InOrder();
 	std::cout << std::endl << "test constructor copy node:\n";
-	BinarySearchTree<int>btcpy2 = bt;
+	K::BinarySearchTree<int>btcpy2 = bt;
 	btcpy2.InOrder();
 	std::cout << std::endl<< "deleting 1 :" << std::endl;
 	bt.eraseR(1);
@@ -38,5 +38,18 @@ int main()
 	bt.eraseR(44);
 	bt.InOrder();
 
+	KV::BinarySearchTree<std::string, std::string> bts;
+	bts.Add("apple", "苹果");
+	bts.Add("orange", "橘子");
+	bts.Add("cucumber", "黄瓜");
+	bts.Add("banana", "香蕉");
+	bts.Add("pen", "笔");
+	bts.InOrder();
+	KV::Node<std::string, std::string>* ret = bts.find("pen");
+	std::cout << ret->_key << " -> "<< ret->_value<<" translation is found\n";
+	bts.erase("banana");
+	bts.AddR("anime", "动漫");
+	bts.eraseR("pen");
+	bts.InOrder();
 	return 0;
 }
